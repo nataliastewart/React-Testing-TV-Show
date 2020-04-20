@@ -75,14 +75,17 @@ test("Episodes renders without errors", () => {
 test("Renders list of episodes after API call", () => {
   //render the component with a empty array for the episodes props
   //re-render the component with episodes data(when the user click the dropdown)
-  const { rerender, getAllByTestId } = render(<Episodes episodes={[]} />);
+  const { rerender, getAllByTestId, queryAllByTestId } = render(
+    <Episodes episodes={[]} />
+  );
 
+  expect(queryAllByTestId(/episodes/i)).toHaveLength(0);
   rerender(<Episodes episodes={episodesData} />);
 
   //query for the episodes being rendered
   //assert that they are listed on the DOM
 
   const episodes = getAllByTestId(/episodes/i);
-  console.log("EPISODES", episodes);
+  //   console.log("EPISODES", episodes);
   expect(episodes).toHaveLength(3);
 });
