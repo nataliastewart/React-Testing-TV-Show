@@ -1,5 +1,5 @@
 import React from "react";
-import { render, waitFor } from "@testing-library/react";
+import { render, waitFor, act } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import App from "./App";
 import { fetchShow as mockFetchShow } from "./api/fetchShow";
@@ -76,12 +76,28 @@ jest.mock("./api/fetchShow");
 // console.log("mockFetchShow- AFTER", mockFetchShow);
 
 test("renders fetchShow when the dropdown is clicked", async () => {
-  mockFetchShow.mockResolvedValueOnce(episodesData);
+  act(() => {
+    mockFetchShow.mockResolvedValueOnce(episodesData);
+  });
 
-  const { getByText, queryAllByTestId } = render(<App />);
+  const { queryAllByTestId, getByPlaceholderText } = render(<App />);
 
-  const dropdown = getByText(/Select a season/i);
+  const dropdown = queryAllByTestId(/Select an option/i);
   userEvent.click(dropdown);
 
-  await waitFor(() => expect(queryAllByTestId(/episodes/i)).toHaveLength(3));
+  await waitFor(() =>
+    expect(getByPlaceholderText(/Select an option/i)).toHaveLength(3)
+  );
 });
+
+// test("renders once loaded", async () => {
+//   act(() => {
+//     mockFetchShow.mockResolvedValueOnce(seasonsData);
+//   });
+//   const { getByPlaceholderText, queryByText } = render(<App />);
+//   waitForElementToBeRemoved(queryByText(/Fetching data.../i)).then(() => {
+//     const selection = getByPlaceholderText("Select an option");
+//     selection.value = "Season 2";
+//     expect(selection).toHaveValue("Season 2");
+//   });
+// });
