@@ -67,31 +67,22 @@ jest.mock("./api/fetchShow");
 // console.log("mockFetchShow- AFTER", mockFetchShow);
 
 test("renders fetchShow when the dropdown is clicked", async () => {
-  act(() => {
-    mockFetchShow.mockResolvedValueOnce(episodesData);
-  });
-
+  mockFetchShow.mockResolvedValueOnce(episodesData);
+  console.log(mockFetchShow);
   const {
+    debug,
     queryAllByTestId,
     getByPlaceholderText,
     getAllByText,
     getByText,
   } = render(<App />);
 
-  await waitFor(() => getByText(/Select a season/i));
-  userEvent.click(getByText(/Select a season/i));
+  await waitFor(() => {
+    getByText(/select a season/i);
+  });
 
-  expect(getAllByText(/season/i)).toHaveLength(1);
+  userEvent.click(getByText(/select a season/i));
+
+  expect(getAllByText(/season/i)).toHaveLength(4);
+  //  debug();
 });
-
-// test("renders once loaded", async () => {
-//   act(() => {
-//     mockFetchShow.mockResolvedValueOnce(seasonsData);
-//   });
-//   const { getByPlaceholderText, queryByText } = render(<App />);
-//   waitForElementToBeRemoved(queryByText(/Fetching data.../i)).then(() => {
-//     const selection = getByPlaceholderText("Select an option");
-//     selection.value = "Season 2";
-//     expect(selection).toHaveValue("Season 2");
-//   });
-// });
